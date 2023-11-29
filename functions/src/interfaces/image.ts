@@ -4,4 +4,5 @@ export interface Image {
 	contentType: string;
 	size: number;
 	name: string;
+	thumbnail?: Image | null;
 }

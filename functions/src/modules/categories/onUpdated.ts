@@ -1,9 +1,7 @@
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
-import { getStorage } from 'firebase-admin/storage';
 
 import { FIREBASE_COLLECTIONS } from '../../constants/collections';
-
-const storage = getStorage();
+import { deleteImages } from '../../helpers/images';
 
 export const onUpdated = onDocumentUpdated(
 	`${FIREBASE_COLLECTIONS.CATEGORIES.name}/{docId}`,
@@ -16,18 +14,12 @@ export const onUpdated = onDocumentUpdated(
 		}
 
 		const image = afterData.image;
-		const beforePath = beforeData?.image?.path;
+		const beforeImage = beforeData.image;
 
-		if (beforePath === image?.path) {
-			return;
-		}
-		const file = storage.bucket().file(beforePath);
-		const exists = await file.exists();
-
-		if (!exists[0]) {
+		if (beforeImage.path === image?.path) {
 			return;
 		}
 
-		await file.delete();
+		await deleteImages(beforeImage);
 	},
 );

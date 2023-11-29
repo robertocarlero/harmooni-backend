@@ -5,6 +5,6 @@ export const transFormDoc = <T>(doc: DocumentSnapshot): T | null => {
 
 	return {
 		id: doc.id,
-		...(doc.data() as T),
+		...doc.data(),
 	} as T;
 };

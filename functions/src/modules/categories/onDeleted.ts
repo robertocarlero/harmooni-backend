@@ -1,9 +1,7 @@
 import { onDocumentDeleted } from 'firebase-functions/v2/firestore';
-import { getStorage } from 'firebase-admin/storage';
 
 import { FIREBASE_COLLECTIONS } from '../../constants/collections';
-
-const storage = getStorage();
+import { deleteImages } from '../../helpers/images';
 
 export const onDeleted = onDocumentDeleted(
 	`${FIREBASE_COLLECTIONS.CATEGORIES.name}/{docId}`,
@@ -12,8 +10,6 @@ export const onDeleted = onDocumentDeleted(
 		const { image } = snap.data() || {};
 		if (!image) return;
 
-		const { path } = image;
-		const file = storage.bucket().file(path);
-		await file.delete();
+		await deleteImages(image);
 	},
 );
